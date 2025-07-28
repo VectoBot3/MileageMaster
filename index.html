@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MileageMaster — Fuel Tracking for every driver</title> <link rel="icon" type="image/png" href="C:\Users\yeghi\Downloads\MileageMaster\Favicon\MileageMaster-Favicon (no bg).png">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"></script>
+</head>
+<body>
+  <!-- Header with unit and theme controls -->
+  <header>
+    <h1>MileageMaster <small><small><small><i> Fuel Tracking for <u>EVERY</u> driver.</i></small></small></small></h1>
+    <div class="header-controls">
+      <div class="unit-switch">
+        <label for="unitSystem" title="Select your preferred unit system (Metric: Liters/100km, Imperial: Miles Per Gallon)">Units:</label>
+        <select id="unitSystem" title="Choose between Metric (Liters/100km) and Imperial (Miles Per Gallon)">
+          <option value="metric">Metric (L/100km)</option>
+          <option value="imperial">Imperial (MPG)</option>
+        </select>
+      </div>
+      <div class="theme-switch">
+        <label class="switch" title="Toggle between light and dark themes">
+          <input type="checkbox" id="themeToggle">
+          <span class="slider round"></span>
+        </label>
+        <span id="themeLabel">Light Mode</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Section for selecting, adding, and editing cars -->
+  <section id="carManager">
+    <h2>Car Selection</h2>
+    <div class="car-controls">
+      <!-- Car selection dropdown and buttons are dynamically generated here -->
+    </div>
+  </section>
+
+  <!-- Form for adding a new fuel entry -->
+  <section id="entryForm">
+    <h2>New Fuel Entry</h2>
+    <form id="fuelForm">
+      <input type="number" id="odometerReading" placeholder="Odometer Reading" required step="0.01" title="Enter your car's current odometer reading (e.g., kilometers or miles)" />
+      <input type="number" id="fuel" placeholder="Fuel Added" required step="0.01" title="Enter the amount of fuel you added (e.g., liters or gallons)" />
+      <input type="number" id="price" placeholder="Price per Unit" required step="0.001" title="Enter the price you paid per unit of fuel (e.g., $/liter or $/gallon)" />
+      <input type="date" id="date" required title="Select the date of this fuel entry" />
+      <button type="submit" title="Add this fuel entry to your log">Add Entry</button>
+    </form>
+  </section>
+
+  <!-- Section for displaying and managing the fuel log -->
+  <section id="log">
+    <h2>Fuel Log</h2>
+    <div class="log-controls">
+      <button id="editLogBtn" title="Edit all entries in a modal window">Edit Log</button>
+      <button onclick="exportLog('csv')" title="Export the current car's fuel log as a CSV file">Export Log (CSV)</button>
+      <button onclick="exportLog('json')" title="Export the current car's fuel log as a JSON file">Export Log (JSON)</button>
+      <button onclick="document.getElementById('importFileInput').click()" title="Import fuel data from a JSON or CSV file">
+        Import Data
+        <input type="file" id="importFileInput" accept=".json,.csv" onchange="importData()" style="display: none;">
+      </button>
+      <button onclick="clearSession()" title="Clear all fuel entry data for the currently selected car">Clear Current Car Data</button>
+    </div>
+    <table id="logTable">
+      <thead>
+        <tr>
+          <th class="sortable-header" data-sort-by="date" title="Click to sort by date">Date</th>
+          <th class="sortable-header" data-sort-by="odometerReading" title="Click to sort by odometer reading">Odometer</th>
+          <th class="sortable-header" data-sort-by="distanceTraveled" title="Click to sort by distance traveled">Distance Traveled</th>
+          <th class="sortable-header" data-sort-by="fuel" title="Click to sort by fuel volume">Fuel</th>
+          <th class="sortable-header" data-sort-by="price" title="Click to sort by price per unit">Price/Unit</th>
+          <th class="sortable-header" data-sort-by="totalSpend" title="Click to sort by total spent">Total Spent</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody id="logBody"></tbody>
+    </table>
+    <!-- Container for Error and Log notices -->
+    <div id="logNoticesContainer">
+        <!-- Notices will be dynamically added here by JavaScript -->
+    </div>
+  </section>
+
+  <!-- Section for displaying statistics -->
+  <section id="stats">
+    <h2>Statistics</h2>
+    <div id="statsNotice" class="hidden stats-notice"></div>
+    <div id="statsContent"></div>
+    <div id="accordionControls" class="hidden">
+      <button id="openAllAccordions">Open All</button>
+      <button id="closeAllAccordions">Close All</button>
+    </div>
+    <div id="statsAccordionContainer" class="hidden"></div>
+    <div class="stats-export-buttons hidden">
+      <button onclick="exportStats('csv')" title="Export all calculated statistics as a CSV file">Export Stats (CSV)</button>
+      <button onclick="exportStats('json')" title="Export all calculated statistics as a JSON file">Export Stats (JSON)</button>
+    </div>
+  </section>
+
+  <!-- Section for displaying total cost of ownership -->
+  <section id="ownershipCost">
+    <h2>Total Cost of Ownership</h2>
+    <div id="ownershipCostNotice" class="hidden stats-notice"></div>
+    <div id="ownershipCostContent"></div>
+  </section>
+
+  <!-- Section for displaying charts -->
+  <section id="charts">
+    <h2>Charts</h2>
+    <div id="chartsNotice" class="hidden stats-notice"></div>
+    <div id="chartsContent">
+        <div class="chart-display-area">
+          <!-- Chart canvases are dynamically generated here -->
+        </div>
+    </div>
+    <div class="charts-export-buttons hidden">
+        <button onclick="exportAllCharts('png')" title="Export all charts as PNG images in a ZIP file">Export All Charts (PNG)</button>
+    </div>
+  </section>
+
+  <!-- Footer with help button -->
+  <footer>
+    <p>&copy; 2025 MileageMaster | <a href="faq-tips.html" title="Go to FAQ and Tips" target="_blank">FAQ & Tips</a></p>
+    <button id="helpBtn" title="Open the tutorial and help guide">Help / Tutorial</button>
+  </footer>
+
+
+  <!-- MODALS -->
+  <!-- Tutorial Modal -->
+  <div id="tutorialModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Welcome to MileageMaster!</h2>
+      <p>Here’s a quick guide to get you started:</p>
+      <ol>
+        <li><strong>Add Your Car:</strong> Use "+ Add Car" to name your car and optionally add its purchase price for "Total Cost of Ownership" calculation.</li>
+        <li><strong>Set Your Units:</strong> Use the "Units" dropdown to switch between Metric (L/100km) and Imperial (MPG).</li>
+        <li><strong>Log Your Fill-ups:</strong> Use the "New Fuel Entry" form. The first entry sets the starting odometer and is highlighted.</li>
+        <li><strong>Sort Your Log:</strong> Click on any column header in the log table to sort by that column.</li>
+        <li><strong>Analyze Your Data:</strong> With at least 4 total entries (first entry + 3 fill-ups), detailed statistics and charts will be generated. Click charts to enlarge.</li>
+        <li><strong>Edit/Delete Entries:</strong> Use "Edit Log" to correct entries or the '❌' icon to delete individual entries.</li>
+        <li><strong>Import/Export:</strong> Import data from JSON/CSV, and export logs, stats, or charts.</li>
+      </ol>
+      <button onclick="closeTutorial()">Got It!</button>
+    </div>
+  </div>
+
+  <!-- Theme Selection Modal -->
+  <div id="themeModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Choose Your Theme</h2>
+      <p>Would you like to use the light or dark theme?</p>
+      <p> </p>
+      <div class="modal-actions">
+        <button id="lightThemeBtn">☀️ Light Theme</button>
+        <button id="darkThemeBtn">🌙 Dark Theme</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enlarged Chart Modal -->
+  <div id="chartModal" class="modal hidden">
+    <div class="modal-content">
+      <h2 id="modalChartTitle"></h2>
+      <img id="modalChartImage" src="" alt="Enlarged Chart">
+      <div class="modal-actions">
+        <button id="downloadChartBtn">Download Chart (PNG)</button>
+        <button onclick="closeChartModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Log Modal -->
+  <div id="editLogModal" class="modal hidden">
+    <div class="modal-content large">
+        <h2>Edit Fuel Log</h2>
+        <div class="modal-table-container">
+            <table id="editLogTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Odometer</th>
+                        <th>Fuel</th>
+                        <th>Price/Unit</th>
+                    </tr>
+                </thead>
+                <tbody id="editLogBody"></tbody>
+            </table>
+        </div>
+        <div class="modal-actions">
+            <button id="saveLogChangesBtn">Save Changes</button>
+            <button onclick="closeEditLogModal()">Cancel</button>
+        </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
