@@ -96,7 +96,7 @@ Using MileageMaster is easy; simply open MileageMaster.github.io on any internet
 
 ### How to Use MileageMaster — A Quick Tutorial:
 MileageMaster is intuitive. Here’s a step-by-step guide to maximize its features:
-1.	**Launch the App:** Open [VectoBot3.Github.io/MileageMaster](vectobot3.github.io/mileagemaster) in a supported browser. First-time users will see a theme selection pop-up, followed by a welcome tutorial guiding them through initial setup and features.
+1.	**Launch the App:** Open [VectoBot3.Github.io/MileageMaster](https://vectobot3.github.io/MileageMaster/) in a supported browser. First-time users will see a theme selection pop-up, followed by a welcome tutorial guiding them through initial setup and features.
 2.	**Add Your Car:**
 	-	Go to the "Car Selection" section.
 	-	Click "+ Add Car."
