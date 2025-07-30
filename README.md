@@ -44,7 +44,7 @@ Get real-time, in-depth calculations for metrics including distance traveled, to
 
 ### Interactive Charts:
 Visualize fuel usage, costs, and trends with dynamic, responsive Chart.js-powered charts. These visuals simplify patterns and changes over time.
--	**Chart Types:** Explore line charts for trends (MPG/L/100km, cost per distance, fuel price changes) and bar charts for individual entry data (cost per entry, fuel volume).
+-	**Chart Types:** Explore line charts for trends (MPG/L/100km, cost per distance, fuel price changes, cumulative distance) and bar charts for individual entry data (cost per entry, fuel volume).
 -	**Enlarged View:** Click any chart to open it in a larger pop-up window for a more detailed view.
 -	**Chart Export:** Download individual charts as high-quality PNG images. For convenience, export all charts at once in a single, organized ZIP file.
 
@@ -70,6 +70,14 @@ Experience a modern, intuitive, and responsive design!
 -	**Helpful Tutorial:** A friendly pop-up automatically guides unaccustomed users through primary features on their first visit.
 -	**Custom Modals:** All alert and confirmation messages use custom-designed pop-up windows, keeping a consistent, polished app appearance. 
 -	**Tooltips:** Hover over stats or controls for informative tooltips providing extra context and explanations, making the app easier to understand.
+
+### Device Compatibility:
+-	**Responsive Design:** Enjoy a seamless experience on any screen size or device, from desktops to tablets and smartphones.
+
+### User Guidance & Accessibility:
+-	**Interactive Tutorial:** A helpful tutorial guides new users through the app's core functionalities upon first launch.
+-	**Clear Messaging:** Intuitive prompts and messages provide guidance and feedback throughout the app's use.
+-	**Keyboard Navigation:** Navigate the entire application seamlessly using only your keyboard, enhancing accessibility and efficiency.
 
 ## Technologies Used:
 MileageMaster utilizes standard web technologies and relies on these open-source libraries for it’s functionality:
@@ -132,6 +140,8 @@ MileageMaster is intuitive. Here’s a step-by-step guide to maximize its featur
 	-	In the header, click the theme toggle switch to switch between light and dark modes. The app remembers your preferences.
 11.	**Help/Tutorial:**
 	-	For a quick refresher or guidance, click the "Help / Tutorial" button in the footer. This re-opens the first-use tutorial.
+12.	**FAQ & Tips:**
+	-	For common questions and helpful tips, please visit our [FAQ & Tips page](faq-tips.html) or click on the "FAQ & Tips" button at the bottom of the main page.
 
 ## Contribution & Feedback:
 MileageMaster is an open-source project built with passion and community collaboration. Insights, bug reports, and feature suggestions are welcome! Please open an issue on the GitHub repository or email me directly at **yeghikianaren@gmail.com**. I'm always looking forward to improving the app based on your needs!
