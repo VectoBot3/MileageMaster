@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MileageMaster — FAQ & Tips</title>
+  <!-- Preload CSS for faster rendering -->
+  <link rel="preload" href="style.css" as="style" />
+  <link rel="icon" type="https://github.com/VectoBot3/MileageMaster/blob/main/Favicon/MileageMaster-Favicon%20(no%20bg).png?raw=true">
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    // Immediately apply theme preference to prevent FOUC (Flash of Unstyled Content)
+    (function() {
+      const theme = localStorage.getItem('themePreference');
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark-theme');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <h1>MileageMaster <span class="header-subtitle"><i>FAQ & Tips</i></span></h1>
+    <div class="header-controls">
+       <div class="theme-switch">
+        <label class="switch" title="Toggle between light and dark themes">
+          <input type="checkbox" id="themeToggle">
+          <span class="slider round"></span>
+        </label>
+        <span id="themeLabel">Light Mode</span>
+      </div>
+      <a href="index.html" title="Return to the main application">
+          <button id="backToAppBtn">← Back to App</button>
+      </a>
+    </div>
+  </header>
+
+  <section id="faq">
+    <h2>Frequently Asked Questions (FAQ)</h2>
+    <div class="accordion-controls full-width-controls">
+        <button class="open-all-btn">Open All</button>
+        <button class="close-all-btn">Close All</button>
+    </div>
+    <div class="accordion-container">
+      <details>
+        <summary>How do I get started?</summary>
+        <div class="accordion-content">
+          <p>It's easy! The first time you open the app, you'll be prompted to add your first car. Just give it a name and, if you want, add its purchase price to track the total cost of ownership. After that, start adding fuel entries every time you fill up. The app will do the rest!</p>
+        </div>
+      </details>
+      <details>
+        <summary>Why aren't the stats and charts showing up?</summary>
+        <div class="accordion-content">
+          <p>To provide meaningful and accurate calculations, the app requires a minimum amount of data. You need at least <strong>four total entries</strong>: your first entry (which sets the baseline odometer reading) plus three more fill-ups. Once you have enough data, the stats and charts sections will automatically populate.</p>
+        </div>
+      </details>
+      <details>
+        <summary>What does the "first entry" (highlighted in the log) mean?</summary>
+        <div class="accordion-content">
+          <p>The first entry for any car is considered the starting point. Its odometer reading is used as the baseline from which all future distances are calculated. Because it doesn't have a previous entry to compare against, it cannot be used to calculate fuel economy or distance traveled, so it is excluded from all statistical calculations and charts.</p>
+        </div>
+      </details>
+       <details>
+        <summary>What does an entry "highlighted in red" mean?</summary>
+        <div class="accordion-content">
+          <p>A red entry in your log indicates an data error. This usually happens if the odometer reading is lower than a previous entry, or if some data is missing. These invalid entries are ignored during statistical calculations to ensure your reports are accurate. You should use the "Edit Log" button to correct them.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Can I edit an incorrect entry?</summary>
+        <div class="accordion-content">
+          <p>Yes! In the "Fuel Log" section, click the <strong>"Edit Log"</strong> button. This will open a modal window where you can correct the date, odometer, fuel amount, and price for all your entries. You can also delete an individual entry by clicking the '❌' icon in its row in the main log table.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Is my data private?</summary>
+        <div class="accordion-content">
+          <p>Absolutely. All the data you enter into MileageMaster is stored locally in your web browser's storage. It is never sent to a server or seen by anyone else. Clearing your browser's data or using the "Clear Current Car Data" button will permanently remove it.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="tips">
+    <h2>Tips & Tricks for Better Fuel Economy</h2>
+    <div class="accordion-controls full-width-controls">
+        <button class="open-all-btn">Open All</button>
+        <button class="close-all-btn">Close All</button>
+    </div>
+    <div class="accordion-container">
+      <details>
+        <summary>Driving Habits: The Biggest Impact</summary>
+        <div class="accordion-content">
+          <ul>
+            <li><strong>Drive Smoothly:</strong> Aggressive driving (speeding, rapid acceleration, and hard braking) is the biggest fuel-waster. It can lower your gas mileage by 15% to 40%. Drive like you have a cup of coffee on the dash you don't want to spill.</li>
+            <li><strong>Anticipate Traffic Flow:</strong> Look ahead and anticipate stops. Coast to a stoplight instead of braking hard at the last second. This not only saves fuel but also reduces wear on your brakes.</li>
+            <li><strong>Observe the Speed Limit:</strong> Gas mileage usually decreases rapidly at speeds above 50 mph (80 km/h). For every 5 mph you drive over 50 mph, you're paying significantly more per gallon/liter.</li>
+            <li><strong>Avoid Excessive Idling:</strong> Idling uses a quarter to a half-gallon of fuel per hour. If you'll be stopped for more than 30-60 seconds, turn off the engine. It takes less fuel to restart a warm engine than it does to idle for a minute.</li>
+            <li><strong>Use Cruise Control on Highways:</strong> On long, flat stretches of highway, using cruise control helps maintain a constant speed and saves gas. However, don't use it in hilly terrain, as it can be less efficient than a driver's gentle touch on the throttle.</li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>Vehicle Maintenance: The Easy Wins</summary>
+        <div class="accordion-content">
+          <ul>
+            <li><strong>Properly Inflated Tires:</strong> This is one of the easiest and most effective ways to save fuel. You can improve your gas mileage by up to 3% by keeping your tires inflated to the manufacturer's recommended pressure. Under-inflated tires create more rolling resistance.</li>
+            <li><strong>Use the Recommended Motor Oil:</strong> Using the manufacturer's recommended grade of motor oil can improve your fuel economy by 1-2%. Look for oil that says "Energy Conserving" on the API performance symbol to ensure it contains friction-reducing additives.</li>
+            <li><strong>Keep Your Engine Tuned:</strong> A properly tuned engine runs more efficiently. Replacing old spark plugs, checking oxygen sensors, and ensuring the engine is in good working order can improve mileage by an average of 4%.</li>
+            <li><strong>Replace Clogged Air Filters:</strong> A clogged air filter can significantly decrease fuel economy and engine performance on older cars with carburetors. On modern, fuel-injected engines, the effect is less pronounced but can still hamper performance and acceleration.</li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>Planning & Logistics: Be Smart Before You Start</summary>
+        <div class="accordion-content">
+          <ul>
+            <li><strong>Reduce Unnecessary Weight:</strong> An extra 100 pounds (45 kg) in your vehicle could reduce your MPG by about 1-2%. Remove heavy items like golf clubs, toolboxes, or sandbags when you don't need them.</li>
+            <li><strong>Remove Roof Racks & Cargo Boxes:</strong> A loaded roof rack or cargo box creates significant aerodynamic drag, reducing fuel economy by up to 20% on the highway. Remove them when not in use.</li>
+            <li><strong>Combine Your Errands:</b> Several short trips from a cold start can use twice as much fuel as a single, longer multipurpose trip. Plan your route to get all your errands done in one go.</li>
+            <li><strong>Limit AC Usage:</strong> The air conditioner is a major power drain on the engine. On hot days, it can reduce fuel economy by up to 25%. Use it sparingly or use the "recirculation" mode once the cabin is cool. At low speeds, opening windows is more efficient; at highway speeds, the AC is often better due to the aerodynamic drag from open windows.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Aren Yeghikian | Made With Love & Care ❤️</p>
+    <button id="footerBackToAppBtn" title="Return to the main application">← Back to App</button>
+  </footer>
+
+  <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Add transitions-enabled class after a slight delay for smooth initial load
+      setTimeout(() => {
+        document.body.classList.add('transitions-enabled');
+      }, 500);
+
+      const themeToggle = document.getElementById('themeToggle');
+      const themeLabel = document.getElementById('themeLabel');
+      const backToAppBtn = document.getElementById('backToAppBtn');
+      const footerBackToAppBtn = document.getElementById('footerBackToAppBtn');
+
+      /**
+       * Applies the selected theme to the document.
+       * @param {string} themeName - 'light' or 'dark'.
+       */
+      const applyTheme = (themeName) => {
+        if (themeName === 'dark') {
+          document.documentElement.classList.add('dark-theme');
+          themeToggle.checked = true;
+          if(themeLabel) themeLabel.textContent = '🌙 Dark Mode';
+        } else {
+          document.documentElement.classList.remove('dark-theme');
+          themeToggle.checked = false;
+          if(themeLabel) themeLabel.textContent = '☀️ Light Mode';
+        }
+      };
+
+      // Apply theme on load based on preference, if none, it will default to light (CSS default)
+      const currentTheme = localStorage.getItem('themePreference');
+      if (currentTheme) {
+        applyTheme(currentTheme);
+      } else {
+        // If no preference, ensure the toggle matches the initial (light) state
+        applyTheme('light');
+      }
+
+      // Event listener for theme toggle
+      themeToggle.addEventListener('change', () => {
+        const newTheme = themeToggle.checked ? 'dark' : 'light';
+        localStorage.setItem('themePreference', newTheme);
+        applyTheme(newTheme);
+      });
+
+      // Event listeners for accordion controls
+      document.querySelectorAll('.open-all-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const container = button.closest('section').querySelector('.accordion-container');
+          container.querySelectorAll('details').forEach(detail => {
+            detail.open = true;
+          });
+        });
+      });
+
+      document.querySelectorAll('.close-all-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const container = button.closest('section').querySelector('.accordion-container');
+          container.querySelectorAll('details').forEach(detail => {
+            detail.open = false;
+          });
+        });
+      });
+
+      // Event listeners for "Back to App" buttons
+      if (backToAppBtn) {
+        backToAppBtn.addEventListener('click', () => {
+          location.href = 'index.html';
+        });
+      }
+      if (footerBackToAppBtn) {
+        footerBackToAppBtn.addEventListener('click', () => {
+          location.href = 'index.html';
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

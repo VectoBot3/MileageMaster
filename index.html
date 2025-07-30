@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MileageMaster — Fuel Tracking for every driver</title>
+    <!-- Preload CSS for faster rendering -->
+    <link rel="preload" href="style.css" as="style" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://github.com/VectoBot3/MileageMaster/blob/main/Favicon/MileageMaster-Favicon%20(no%20bg).png?raw=true"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      // Immediately apply theme preference to prevent FOUC (Flash of Unstyled Content)
+      (function () {
+        const theme = localStorage.getItem("themePreference");
+        if (theme === "dark") {
+          document.documentElement.classList.add("dark-theme");
+        }
+      })();
+    </script>
+    <!-- Defer loading of Chart.js, FileSaver.js, and JSZip.js until HTML is parsed -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"
+      defer
+    ></script>
+  </head>
+  <body>
+    <header>
+      <h1>
+        MileageMaster
+        <span class="header-subtitle"
+          ><i> Fuel Tracking for <u>EVERY</u> driver.</i></span
+        >
+      </h1>
+      <div class="header-controls">
+        <div class="unit-switch">
+          <label
+            for="unitSystem"
+            title="Select your preferred unit system (Metric: Liters/100km, Imperial: Miles Per Gallon)"
+            >Units:</label
+          >
+          <select
+            id="unitSystem"
+            title="Choose between Metric (Liters/100km) and Imperial (Miles Per Gallon)"
+          >
+            <option value="metric">Metric (L/100km)</option>
+            <option value="imperial">Imperial (MPG)</option>
+          </select>
+        </div>
+        <div class="theme-switch">
+          <label class="switch" title="Toggle between light and dark themes">
+            <input type="checkbox" id="themeToggle" />
+            <span class="slider round"></span>
+          </label>
+          <span id="themeLabel">Light Mode</span>
+        </div>
+      </div>
+    </header>
+
+    <section id="carManager">
+      <h2>Car Selection</h2>
+      <div class="car-controls"></div>
+    </section>
+
+    <section id="entryForm">
+      <h2>New Fuel Entry</h2>
+      <form id="fuelForm">
+        <input
+          type="number"
+          id="odometerReading"
+          placeholder="Odometer Reading"
+          required
+          step="0.01"
+          title="Enter your car's current odometer reading (e.g., kilometers or miles)"
+        />
+        <input
+          type="number"
+          id="fuel"
+          placeholder="Fuel Added"
+          required
+          step="0.01"
+          title="Enter the amount of fuel you added (e.g., liters or gallons)"
+        />
+        <input
+          type="number"
+          id="price"
+          placeholder="Price per Unit"
+          required
+          step="0.001"
+          title="Enter the price you paid per unit of fuel (e.g., $/liter or $/gallon)"
+        />
+        <input
+          type="date"
+          id="date"
+          required
+          title="Select the date of this fuel entry"
+        />
+        <button type="submit" title="Add this fuel entry to your log">
+          Add Entry
+        </button>
+      </form>
+    </section>
+
+    <section id="log">
+      <h2>Fuel Log</h2>
+      <div class="log-controls">
+        <button id="editLogBtn" title="Edit all entries in a modal window">
+          Edit Log
+        </button>
+        <button
+          id="exportLogCsvBtn"
+          title="Export the current car's fuel log as a CSV file"
+        >
+          Export Log (CSV)
+        </button>
+        <button
+          id="exportLogJsonBtn"
+          title="Export the current car's fuel log as a JSON file"
+        >
+          Export Log (JSON)
+        </button>
+        <button
+          id="importDataBtn"
+          title="Import fuel data from a JSON or CSV file"
+        >
+          Import Data
+          <input
+            type="file"
+            id="importFileInput"
+            accept=".json,.csv"
+            style="display: none"
+          />
+        </button>
+        <button
+          id="clearCurrentCarDataBtn"
+          title="Clear all fuel entry data for the currently selected car"
+        >
+          Clear Current Car Data
+        </button>
+      </div>
+      <div class="table-container">
+        <table id="logTable">
+          <thead>
+            <tr>
+              <th
+                class="sortable-header"
+                data-sort-by="date"
+                title="Click to sort by date"
+              >
+                Date
+              </th>
+              <th
+                class="sortable-header"
+                data-sort-by="odometerReading"
+                title="Click to sort by odometer reading"
+              >
+                Odometer
+              </th>
+              <th
+                class="sortable-header"
+                data-sort-by="distanceTraveled"
+                title="Click to sort by distance traveled"
+              >
+                Distance Traveled
+              </th>
+              <th
+                class="sortable-header"
+                data-sort-by="fuel"
+                title="Click to sort by fuel volume"
+              >
+                Fuel
+              </th>
+              <th
+                class="sortable-header"
+                data-sort-by="price"
+                title="Click to sort by price per unit"
+              >
+                Price/Unit
+              </th>
+              <th
+                class="sortable-header"
+                data-sort-by="totalSpend"
+                title="Click to sort by total spent"
+              >
+                Total Spent
+              </th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody id="logBody"></tbody>
+        </table>
+      </div>
+      <div id="logNoticesContainer"></div>
+    </section>
+
+    <section id="stats">
+      <h2>Statistics</h2>
+      <div id="statsNotice" class="hidden stats-notice"></div>
+      <div id="statsContent"></div>
+      <div id="statsControlsContainer" class="hidden">
+        <div class="accordion-controls">
+          <button id="openAllAccordions">Open All</button>
+          <button id="closeAllAccordions">Close All</button>
+        </div>
+        <div class="stats-export-buttons">
+          <button
+            id="exportStatsCsvBtn"
+            title="Export all calculated statistics as a CSV file"
+          >
+            Export Stats (CSV)
+          </button>
+          <button
+            id="exportStatsJsonBtn"
+            title="Export all calculated statistics as a JSON file"
+          >
+            Export Stats (JSON)
+          </button>
+        </div>
+      </div>
+      <div
+        id="statsAccordionContainer"
+        class="accordion-container hidden"
+      ></div>
+    </section>
+
+    <section id="ownershipCost">
+      <h2>Total Cost of Ownership</h2>
+      <div id="ownershipCostNotice" class="hidden stats-notice"></div>
+      <div id="ownershipCostContent"></div>
+    </section>
+
+    <section id="charts">
+      <h2>Charts</h2>
+      <div id="chartsNotice" class="hidden stats-notice"></div>
+      <div id="chartsContent">
+        <div class="chart-display-area"></div>
+      </div>
+      <div class="charts-export-buttons hidden">
+        <button
+          class="btn-full-width"
+          id="exportAllChartsPngBtn"
+          title="Export all charts as PNG images in a ZIP file"
+        >
+          Export All Charts (PNG)
+        </button>
+      </div>
+    </section>
+
+    <footer>
+      <p>
+        &copy; 2025 Aren Yeghikian |
+        <a href="faq-tips.html" title="Go to FAQ and Tips">FAQ & Tips</a>
+      </p>
+      <button id="helpBtn" title="Open the tutorial and help guide">
+        Help / Tutorial
+      </button>
+    </footer>
+
+    <div id="tutorialModal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Welcome to MileageMaster!</h2>
+        <p>Here’s a quick guide to get you started:</p>
+        <ol>
+          <li>
+            <strong>Add Your Car:</strong> Use "+ Add Car" to name your car and
+            optionally add its purchase price for "Total Cost of Ownership"
+            calculation.
+          </li>
+          <li>
+            <strong>Set Your Units:</strong> Use the "Units" dropdown to switch
+            between Metric (L/100km) and Imperial (MPG).
+          </li>
+          <li>
+            <strong>Log Your Fill-ups:</strong> Use the "New Fuel Entry" form.
+            The first entry sets the starting odometer and is highlighted.
+          </li>
+          <li>
+            <strong>Sort Your Log:</strong> Click on any column header in the
+            log table to sort by that column.
+          </li>
+          <li>
+            <strong>Analyze Your Data:</strong> With at least 4 total entries
+            (first entry + 3 fill-ups), detailed statistics and charts will be
+            generated. Click charts to enlarge.
+          </li>
+          <li>
+            <strong>Edit/Delete Entries:</strong> Use "Edit Log" to correct
+            entries or the '❌' icon to delete individual entries.
+          </li>
+          <li>
+            <strong>Import/Export:</strong> Import data from JSON/CSV, and
+            export logs, stats, or charts.
+          </li>
+        </ol>
+        <button class="btn-modal-full" id="closeTutorialBtn">Got It!</button>
+      </div>
+    </div>
+
+    <div id="themeModal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Choose Your Theme</h2>
+        <p>Would you like to use the light or dark theme?</p>
+        <p></p>
+        <div class="modal-actions">
+          <button id="lightThemeBtn" class="btn-modal-full">
+            ☀️ Light Theme
+          </button>
+          <button id="darkThemeBtn" class="btn-modal-full">
+            🌙 Dark Theme
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="chartModal" class="modal hidden">
+      <div class="modal-content">
+        <img id="modalChartImage" src="" alt="Enlarged Chart" />
+        <div class="modal-actions">
+          <button id="downloadChartBtn" class="btn-modal-full">
+            Download Chart (PNG)
+          </button>
+          <button class="btn-modal-full" id="closeChartModalBtn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="editLogModal" class="modal hidden">
+      <div class="modal-content large">
+        <h2>Edit Fuel Log</h2>
+        <div class="modal-table-container">
+          <table id="editLogTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Odometer</th>
+                <th>Fuel</th>
+                <th>Price/Unit</th>
+              </tr>
+            </thead>
+            <tbody id="editLogBody"></tbody>
+          </table>
+        </div>
+        <div class="modal-actions">
+          <button id="saveLogChangesBtn" class="btn-modal-full">
+            Save Changes
+          </button>
+          <button class="btn-modal-full" id="cancelEditLogModalBtn">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- The main application script, deferred to run after DOM is parsed -->
+    <script src="script.js" defer></script>
+  </body>
+</html>
