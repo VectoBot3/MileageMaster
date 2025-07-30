@@ -147,7 +147,7 @@ MileageMaster is intuitive. Here’s a step-by-step guide to maximize its featur
 MileageMaster is an open-source project built with passion and community collaboration. Insights, bug reports, and feature suggestions are welcome! Please open an issue on the GitHub repository or email me directly at **yeghikianaren@gmail.com**. I'm always looking forward to improving the app based on your needs!
 
 ## License:
-Copyright (c) 2025 Aren Yeghikian
+Copyright © 2025 Aren Yeghikian
 
 This project is open-source and available under the MIT License. See the LICENSE.md file for full details.
 
